@@ -1,0 +1,43 @@
+# Optimized for GKE
+apiVersion: cosmos.strange.love/v1
+kind: CosmosFullNode
+metadata:
+  # Name should be the chain name and network environment.
+  name: nextnet
+  namespace: nnw-dev
+spec:
+  replicas: 1
+  chain:
+    network: testnet
+    chainID: xnet_03012023-1
+    binary: xnetd
+    skipInvariants: true
+    genesisURL: "https://raw.githubusercontent.com/nextnet-works/xnet-chain/master/genesis.json"
+    # Get latest snapshot at: https://www.polkachu.com/tendermint_snapshots/cosmos
+    snapshotURL: 
+    # Tendermint config (translates to config.toml)
+    config:
+      peers: "2a0c32c085713a5a2e1619cb4ab789cadbf2cdbf@54.177.136.249:26656" 
+      seeds: "2a0c32c085713a5a2e1619cb4ab789cadbf2cdbf@54.177.136.249:26656"
+#      overrides: |-
+        # Set config.toml overrides here. Such as:
+#        [p2p]
+#        external_address = "34.136.86.175:26656"
+    
+# Cosmos SDK config (translates to app.toml)
+    app:
+      minGasPrice: "0.0025uxnet"
+  podTemplate:
+    image: "ghcr.io/nextnet-works/xnet:0.1.1"
+    resources:
+      requests:
+        cpu: "0.5"
+      limits:
+        cpu: "1"
+  volumeClaimTemplate:
+    storageClassName: "standard-rwo"
+    resources:
+      requests:
+        storage: 20Gi
+      
+  
